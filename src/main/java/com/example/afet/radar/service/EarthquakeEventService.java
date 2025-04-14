@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +28,7 @@ public class EarthquakeEventService {
     @Transactional
     public List<EarthquakeEventDto> getEarthquakeEvents(LocalDateTime start, LocalDateTime end) {
 
-        if (start == null || end == null) {
+        if (Optional.ofNullable(start).isEmpty() || java.util.Optional.ofNullable(end).isEmpty()) {
             start = LocalDateTime.now().minusDays(1);
             end = LocalDateTime.now();
         }

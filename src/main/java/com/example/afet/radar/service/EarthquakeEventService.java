@@ -7,7 +7,9 @@ import com.example.afet.radar.model.EarthquakeEvent;
 import com.example.afet.radar.projection.EarthquakeEventView;
 import com.example.afet.radar.repository.EarthquakeEventRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +25,8 @@ public class EarthquakeEventService {
 
     private final EarthquakeEventRepository earthquakeEventRepository;
 
-    public List<EarthquakeEventDto> earthquakeEventDto(LocalDateTime start, LocalDateTime end) {
+    @Transactional
+    public List<EarthquakeEventDto> getEarthquakeEvents(LocalDateTime start, LocalDateTime end) {
 
         if (start == null || end == null) {
             start = LocalDateTime.now().minusDays(1);
@@ -48,4 +51,21 @@ public class EarthquakeEventService {
     }
 
 
+    @Scheduled(fixedRate = 300000)
+    @Transactional
+    public void updateEarthquakeEvents() {
+        LocalDateTime start = LocalDateTime.now().minusDays(1);
+        LocalDateTime end = LocalDateTime.now();
+
+        List<EarthquakeEvent> earthquakeEvents = afadApiClient.fetchEarthquakeEvents(start, end);
+        List<String> existingEventIds = earthquakeEventRepository.findAllEventIds();
+
+        if (!earthquakeEvents.isEmpty()){
+            List<EarthquakeEvent> newEarthquakeEvents = earthquakeEvents.stream()
+                    .filter(event -> !existingEventIds.contains(event.getEventID()))
+                    .collect(Collectors.toList());
+
+            earthquakeEventRepository.saveAll(newEarthquakeEvents);
+        }
+    }
 }

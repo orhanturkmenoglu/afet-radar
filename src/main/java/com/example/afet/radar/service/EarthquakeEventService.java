@@ -4,7 +4,6 @@ import com.example.afet.radar.client.AfadApiClient;
 import com.example.afet.radar.dto.EarthquakeEventDto;
 import com.example.afet.radar.mapper.EarthquakeEventMapper;
 import com.example.afet.radar.model.EarthquakeEvent;
-import com.example.afet.radar.projection.EarthquakeEventView;
 import com.example.afet.radar.repository.EarthquakeEventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,17 +32,7 @@ public class EarthquakeEventService {
             end = LocalDateTime.now();
         }
 
-        List<EarthquakeEvent> earthquakeEvents = afadApiClient.fetchEarthquakeEvents(start, end);
-
-        List<String> existingEventIds = earthquakeEventRepository.findAllEventIds();
-
-        if (!earthquakeEvents.isEmpty()){
-            List<EarthquakeEvent> newEarthquakeEvents = earthquakeEvents.stream()
-                    .filter(event -> !existingEventIds.contains(event.getEventID()))
-                    .toList();
-
-            earthquakeEventRepository.saveAll(newEarthquakeEvents);
-        }
+        List<EarthquakeEvent> earthquakeEvents = fetchAndSaveNewEvents(start, end);
 
         return earthquakeEvents.stream()
                 .map(earthquakeEventMapper::toDto)
@@ -57,15 +46,21 @@ public class EarthquakeEventService {
         LocalDateTime start = LocalDateTime.now().minusDays(1);
         LocalDateTime end = LocalDateTime.now();
 
+        fetchAndSaveNewEvents(start, end);
+    }
+
+    private List<EarthquakeEvent> fetchAndSaveNewEvents(LocalDateTime start, LocalDateTime end) {
         List<EarthquakeEvent> earthquakeEvents = afadApiClient.fetchEarthquakeEvents(start, end);
         List<String> existingEventIds = earthquakeEventRepository.findAllEventIds();
 
-        if (!earthquakeEvents.isEmpty()){
-            List<EarthquakeEvent> newEarthquakeEvents = earthquakeEvents.stream()
-                    .filter(event -> !existingEventIds.contains(event.getEventID()))
-                    .collect(Collectors.toList());
+        List<EarthquakeEvent> newEarthquakeEvents = earthquakeEvents.stream()
+                .filter(event -> !existingEventIds.contains(event.getEventID()))
+                .toList();
 
+        if (!newEarthquakeEvents.isEmpty()) {
             earthquakeEventRepository.saveAll(newEarthquakeEvents);
         }
+
+        return earthquakeEvents;
     }
 }

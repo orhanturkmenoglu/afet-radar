@@ -1,5 +1,6 @@
 package com.example.afet.radar.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -10,7 +11,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.sql.rowset.serial.SerialStruct;
 import java.time.LocalDateTime;
 
 @Entity
@@ -49,7 +49,7 @@ public class EarthquakeEvent {
 
     private String rms;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime date;
 
     private Boolean isEventUpdate;

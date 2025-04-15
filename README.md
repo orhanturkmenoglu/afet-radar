@@ -16,7 +16,7 @@ Afet-Radar, toplumsal güvenliği artırmayı ve afet bilincini yaymayı amaçla
 
 - **Spring Boot:** Güçlü ve ölçeklenebilir backend yapısı.
 - **RestTemplate:** AFAD’dan anlık veri çekimi.
-- **@Scheduled Anotasyonu:** 5 dakikada bir otomatik güncelleme.
+- **@Scheduled Anotasyonu:** 60 saniye içerisinde verileri otomatik güncelleme.
 - **DTO & Mapper Yapısı:** Veri dönüşümünde temizlik ve düzen.
 - **Projection:** Performansı artırmak için hafif sorgular.
 - **Lombok:** Kodun daha sade, okunabilir ve bakımının kolay olmasını sağlar.

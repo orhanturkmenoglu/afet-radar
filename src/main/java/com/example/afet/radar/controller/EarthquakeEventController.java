@@ -5,6 +5,8 @@ import com.example.afet.radar.service.EarthquakeEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -27,5 +29,12 @@ public class EarthquakeEventController {
     public ResponseEntity<String> updateEarthquakeEvents() {
         earthquakeService.updateEarthquakeEvents();
         return new ResponseEntity<>("Earthquake events updated successfully.", HttpStatus.OK);
+    }
+
+    @GetMapping("/filter-by-magnitude")
+    @SendTo("/topic/earthquake")
+    public ResponseEntity<List<EarthquakeEventDto>> getByMagnitudeGreaterThan(@RequestParam(required = false, defaultValue = "5.0") Double magnitude) {
+        List<EarthquakeEventDto> response = earthquakeService.getByMagnitude(magnitude);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

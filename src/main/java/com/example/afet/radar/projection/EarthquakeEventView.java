@@ -7,6 +7,6 @@ public interface EarthquakeEventView {
     String getLocation();
     String getProvince();
     Double depth();
-    String getMagnitude();
+    Double getMagnitude();
     LocalDateTime getDate();
 }

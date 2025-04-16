@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Afet Radar - Acil Deprem Bildirimi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #d32f2f;
+        }
+
+        .notification {
+            background-color: #fff;
+            border-left: 6px solid #d32f2f;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .notification:hover {
+            transform: scale(1.01);
+        }
+
+        .notification strong {
+            color: #d32f2f;
+        }
+
+        .timestamp {
+            font-size: 0.85em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<h1>🌍 Acil Deprem Bildirimleri</h1>
+<div id="notifications"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+<script>
+    const socket = new SockJS('http://localhost:8080/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('WebSocket bağlantısı başarılı:', frame);
+
+        stompClient.subscribe('/topic/earthquake', function (notification) {
+            const data = JSON.parse(notification.body);
+            showNotification(data);
+        });
+    });
+
+    function showNotification(data) {
+        const container = document.getElementById('notifications');
+
+        const div = document.createElement('div');
+        div.classList.add('notification');
+        div.innerHTML = `
+                <strong>📍 Konum:</strong> ${data.country}, ${data.province}, ${data.district} <br>
+                <strong>📏 Büyüklük:</strong> ${data.magnitude} <br>
+                <strong>📉 Derinlik:</strong> ${data.depth} km <br>
+                <strong>🕒 Tarih:</strong> ${new Date(data.date).toLocaleString()} <br>
+                <strong>📨 Mesaj:</strong> ${data.message || 'Deprem bildirimi alınmıştır.'} <br>
+                <div class="timestamp">Son Güncelleme: ${new Date(data.lastUpdateDate).toLocaleString()}</div>
+            `;
+        container.prepend(div);
+    }
+</script>
+</body>
+</html>

@@ -2,10 +2,12 @@ package com.example.afet.radar.service;
 
 import com.example.afet.radar.client.AfadApiClient;
 import com.example.afet.radar.dto.EarthquakeEventDto;
+import com.example.afet.radar.dto.EarthquakeEventNotificationDto;
 import com.example.afet.radar.mapper.EarthquakeEventMapper;
 import com.example.afet.radar.model.EarthquakeEvent;
 import com.example.afet.radar.repository.EarthquakeEventRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EarthquakeEventService {
 
     private final AfadApiClient afadApiClient;
@@ -24,6 +27,8 @@ public class EarthquakeEventService {
     private final EarthquakeEventMapper earthquakeEventMapper;
 
     private final EarthquakeEventRepository earthquakeEventRepository;
+
+    private final WebSocketService webSocketService;
 
     @Transactional
     public List<EarthquakeEventDto> getEarthquakeEvents(LocalDateTime start, LocalDateTime end) {
@@ -41,7 +46,7 @@ public class EarthquakeEventService {
     }
 
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 60000)
     @Transactional
     public void updateEarthquakeEvents() {
         LocalDateTime start = LocalDateTime.now().minusDays(1);
@@ -49,6 +54,26 @@ public class EarthquakeEventService {
 
         fetchAndSaveNewEvents(start, end);
     }
+
+    public List<EarthquakeEventDto> getByMagnitude(Double magnitude) {
+        // Büyüklüğü belirtilen değerin üstündeki tüm depremleri alıyoruz.
+        List<EarthquakeEvent> earthquakeEvents = earthquakeEventRepository.findByMagnitudeGreaterThan(magnitude);
+
+        if (earthquakeEvents.isEmpty()) {
+            throw new IllegalArgumentException("No earthquake events found with magnitude greater than " + magnitude);
+        }
+
+        // Acil durum uyarısını WebSocket ile tüm kullanıcıları bilgilendirerek gönderiyoruz
+        // Her bir deprem eventi için uyarı gönderilir.
+        for (EarthquakeEvent earthquakeEvent : earthquakeEvents) {
+            EarthquakeEventNotificationDto notificationDto = earthquakeEventMapper.toNotificationDto(earthquakeEvent);
+            webSocketService.sendEmergencyNotification(notificationDto);
+        }
+
+        // EarthquakeEvent'leri DTO'lara dönüştürüp geri döndürüyoruz.
+        return earthquakeEventMapper.toDto(earthquakeEvents);
+    }
+
 
     private List<EarthquakeEvent> fetchAndSaveNewEvents(LocalDateTime start, LocalDateTime end) {
         List<EarthquakeEvent> earthquakeEvents = afadApiClient.fetchEarthquakeEvents(start, end);

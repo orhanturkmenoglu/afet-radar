@@ -15,7 +15,6 @@ public interface EarthquakeEventRepository extends JpaRepository<EarthquakeEvent
 
     List<EarthquakeEventView> findByProvince(String province);
 
-    List<EarthquakeEventView> findByMagnitudeGreaterThan(Double magnitude);
     List<EarthquakeEventView> findByMagnitudeBetween(Double min, Double max);
 
     List<EarthquakeEventView> findByDepthBetween(Double min, Double max);
@@ -26,4 +25,5 @@ public interface EarthquakeEventRepository extends JpaRepository<EarthquakeEvent
     @Query("SELECT e.eventID FROM EarthquakeEvent e")
     List<String> findAllEventIds();
 
+    List<EarthquakeEvent> findByMagnitudeGreaterThan(Double magnitude);
 }

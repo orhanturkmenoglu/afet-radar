@@ -11,6 +11,9 @@ Afet-Radar, toplumsal güvenliği artırmayı ve afet bilincini yaymayı amaçla
 - **Uyarı Sistemi:** Belirli büyüklükteki depremler için kullanıcıya bildirim gönderme.
 - **Özelleştirilmiş Sorgular:** Lokasyona, derinliğe veya büyüklüğe göre sorgulama yapma.
 - **Kullanıcı Bazlı Tercihler:** Kullanıcı bazlı tercihleriyle özelleştirilen uyarı sistemi.
+- **Bildirim Gönderme:** Belirli bir büyüklüğün üzerindeki depremler için kullanıcıya anlık bildirim gönderilir.
+- **WebSocket ile Gerçek Zamanlı Bildirim:** Uygulama, belirlenen eşik değerini geçen depremler için anlık bildirimleri WebSocket üzerinden iletir.
+
 
 ## Projede Kullandığım Teknolojiler 🔧
 
@@ -24,11 +27,9 @@ Afet-Radar, toplumsal güvenliği artırmayı ve afet bilincini yaymayı amaçla
 
 ## Yakında Gelecek Özellikler 🚀
 
-- **Bildirim Gönderme:** Belirli bir büyüklüğün üzerindeki depremler için kullanıcıya bildirim gönderme.
 - **Özelleştirilmiş Sorgular:** Lokasyona, derinliğe veya büyüklüğe göre özelleştirilmiş sorgular.
 - **Kullanıcı Tercihlerine Göre Uyarı Sistemi:** Kullanıcı bazlı tercihlere göre kişiselleştirilmiş uyarılar.
 - **Swagger UI Entegrasyonu:** API dökümantasyonu ve test kolaylığı.
-- **WebSocket ile Gerçek Zamanlı Bildirim:** Anlık bildirimler ve veri güncellemeleri.
 
 ## Proje Nasıl Çalıştırılır?
 

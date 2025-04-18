@@ -13,13 +13,13 @@ Afet-Radar, toplumsal güvenliği artırmayı ve afet bilincini yaymayı amaçla
 - **Kullanıcı Bazlı Tercihler:** Kullanıcı bazlı tercihleriyle özelleştirilen uyarı sistemi.
 - **Bildirim Gönderme:** Belirli bir büyüklüğün üzerindeki depremler için kullanıcıya anlık bildirim gönderilir.
 - **WebSocket ile Gerçek Zamanlı Bildirim:** Uygulama, belirlenen eşik değerini geçen depremler için anlık bildirimleri WebSocket üzerinden iletir.
-
+- **Swagger UI Entegrasyonu:** API dökümantasyonu ve test kolaylığı.
 
 ## Projede Kullandığım Teknolojiler 🔧
 
 - **Spring Boot:** Güçlü ve ölçeklenebilir backend yapısı.
 - **RestTemplate:** AFAD’dan anlık veri çekimi.
-- **@Scheduled Anotasyonu:** 60 saniye içerisinde verileri otomatik güncelleme.
+- **@Scheduled Anotasyonu:** 30 saniye içerisinde verileri otomatik güncelleme.
 - **DTO & Mapper Yapısı:** Veri dönüşümünde temizlik ve düzen.
 - **Projection:** Performansı artırmak için hafif sorgular.
 - **Lombok:** Kodun daha sade, okunabilir ve bakımının kolay olmasını sağlar.
@@ -29,7 +29,7 @@ Afet-Radar, toplumsal güvenliği artırmayı ve afet bilincini yaymayı amaçla
 
 - **Özelleştirilmiş Sorgular:** Lokasyona, derinliğe veya büyüklüğe göre özelleştirilmiş sorgular.
 - **Kullanıcı Tercihlerine Göre Uyarı Sistemi:** Kullanıcı bazlı tercihlere göre kişiselleştirilmiş uyarılar.
-- **Swagger UI Entegrasyonu:** API dökümantasyonu ve test kolaylığı.
+
 
 ## Proje Nasıl Çalıştırılır?
 

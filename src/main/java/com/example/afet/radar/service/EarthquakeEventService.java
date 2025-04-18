@@ -45,6 +45,15 @@ public class EarthquakeEventService {
                 .collect(Collectors.toList());
     }
 
+    public List<EarthquakeEventDto> getEarthquakeEventByProvince(String province) {
+        if (province == null) {
+            throw new NullPointerException("Province cannot be null");
+        }
+        List<EarthquakeEvent> earthquakeEventList = earthquakeEventRepository.findByProvince(province);
+
+        return earthquakeEventMapper.toDto(earthquakeEventList);
+    }
+
 
     @Scheduled(fixedRate = 60000)
     @Transactional

@@ -1,6 +1,7 @@
 package com.example.afet.radar.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -9,7 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -55,6 +55,4 @@ public class EarthquakeEvent {
     private Boolean isEventUpdate;
 
     private LocalDateTime lastUpdateDate;
-
-
 }
